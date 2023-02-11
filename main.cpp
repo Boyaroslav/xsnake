@@ -154,9 +154,10 @@ int main(int argc, char **argv){
     int leng;
     char moving = 'r';
     point apple;
+    bool first_time = 1;
 
     
-    int game = 1;
+    int game = 0;
     char txtsc[] = "your score - ";
     char playag[] = "press any button to play again...";
     char tbuf[1000];
@@ -174,7 +175,7 @@ int main(int argc, char **argv){
             //if(text[0] == 'q'){close();}
         //}
         if(event.type == KeyPress){
-            if(game == 0){game = 1; init(snake, apple, leng, moving, lvlx, lvly); score = to_string(leng - 1);}
+            if(game == 0){game = 1; init(snake, apple, leng, moving, lvlx, lvly); score = to_string(leng - 1); first_time = 0;}
             //cout<<event.xkey.keycode<<endl;
             if (event.xkey.keycode == EXIT_B){close();}
 
@@ -203,11 +204,16 @@ int main(int argc, char **argv){
             XSetBackground(dis, gc, red);
             XSetForeground(dis, gc, green);
             XFillRectangle(dis, win, gc, x_gap, y_gap, sx - (4 * x_gap), sy - (4 * y_gap));
-            
             XSetForeground(dis, gc, black);
-            XDrawString(dis, win, gc, 100, 100, txtsc, 13);
-            XDrawString(dis, win, gc, 200, 100, score.c_str(), score.length());
-            XDrawString(dis, win, gc, 100, 200, playag, 33);
+            if(!first_time){
+            
+                XDrawString(dis, win, gc, 100, 100, txtsc, 13);
+                XDrawString(dis, win, gc, 200, 100, score.c_str(), score.length());
+                XDrawString(dis, win, gc, 100, 200, playag, 33);}
+            else{
+                XDrawString(dis, win, gc, 100, 200, playag, 25);
+            }
+            
         }
         
 

@@ -46,10 +46,10 @@ void create(){
     Font fnt =  XLoadFont(dis, "*-courier-*");
 
     black = RGB(0, 0, 0);
-    white = RGB(25, 255, 255);
-    red = RGB(255, 0, 0);
-    blue = RGB(0, 0, 255);
-    green = RGB(0, 255, 255);
+    white = RGB(255, 255, 255);
+    red = RGB(255, 100, 100);
+    blue = RGB(100, 100, 255);
+    green = RGB(0, 200, 50);
     scr = DefaultScreen(dis);
     win = XCreateSimpleWindow(dis, DefaultRootWindow(dis), 0, 0, sx, sy, 5, green, blue);
     XSetStandardProperties(dis, win, "Nira", "Microsystem", None, NULL, 0, NULL);
