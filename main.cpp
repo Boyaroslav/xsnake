@@ -113,6 +113,17 @@ void draw(point snake[], point apple, int leng, int x, int y, int size){
     XSetForeground(dis, gc, black);
 }
 
+void init(point *&snake, point &apple, int &leng, char &moving, int lvlx, int lvly){
+    leng = 1;
+    moving = 'r';
+    apple = {rand() % (lvlx - 1) + 1, rand() % (lvly - 1) + 1};
+    free(snake);
+    snake = new point[1];
+    snake[0].x = 1;
+    snake[0].y = 1;
+
+}
+
 int main(int argc, char **argv){
 
     string buf;
@@ -140,11 +151,16 @@ int main(int argc, char **argv){
 
     int mov = 1;
     int time = 64000;
-    int leng = 1;
+    int leng;
     char moving = 'r';
-    point apple = {20, 20};
-    snake[0].x = 1;
-    snake[0].y = 1;
+    point apple;
+
+    
+    int game = 1;
+    char txtsc[] = "your score - ";
+    char playag[] = "press any button to play again...";
+    char tbuf[1000];
+    init(snake, apple, leng, moving, lvlx, lvly);
     string score = to_string(leng - 1);
     XSetForeground(dis, gc, black);
 
@@ -158,26 +174,42 @@ int main(int argc, char **argv){
             //if(text[0] == 'q'){close();}
         //}
         if(event.type == KeyPress){
+            if(game == 0){game = 1; init(snake, apple, leng, moving, lvlx, lvly); score = to_string(leng - 1);}
             //cout<<event.xkey.keycode<<endl;
             if (event.xkey.keycode == EXIT_B){close();}
+
             else if (event.xkey.keycode == LEFT_B && moving != 'r'){moving = 'l';}
             else if (event.xkey.keycode == RIGHT_B && moving != 'l'){moving = 'r';}
             else if (event.xkey.keycode == UP_B && moving != 'd'){moving = 'u';}
             else if (event.xkey.keycode == DOWN_B && moving != 'u'){moving = 'd';}
             
         }}
+        if(game){
         draw(); // я тут осознал, что меня спасла перегрузочка
         
         
         draw_filed(x_gap, y_gap, lvlx, lvly, size);
 
-        if(logic(snake, moving, size, apple, leng, x_gap, y_gap, lvlx, lvly, score)){close();}
+        if(logic(snake, moving, size, apple, leng, x_gap, y_gap, lvlx, lvly, score)){game = 0; score = to_string(leng - 1);}
         
         draw(snake, apple, leng, x_gap, y_gap, size);
 
         XSetForeground(dis, gc, white);
         XDrawString(dis, win, gc, 5, sy, score.c_str(), score.length());
         XSetForeground(dis, gc, black);
+        }
+        else{
+            draw();
+            XSetBackground(dis, gc, red);
+            XSetForeground(dis, gc, green);
+            XFillRectangle(dis, win, gc, x_gap, y_gap, sx - (4 * x_gap), sy - (4 * y_gap));
+            
+            XSetForeground(dis, gc, black);
+            XDrawString(dis, win, gc, 100, 100, txtsc, 13);
+            XDrawString(dis, win, gc, 200, 100, score.c_str(), score.length());
+            XDrawString(dis, win, gc, 100, 200, playag, 33);
+        }
+        
 
         usleep(time);
         
